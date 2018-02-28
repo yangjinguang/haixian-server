@@ -1,6 +1,9 @@
 package moduleUser
 
-import "testing"
+import (
+	"testing"
+	"github.com/yangjinguang/wechat-server/libs/models"
+)
 
 var testId int64
 
@@ -68,5 +71,19 @@ func TestUser_DeleteById(t *testing.T) {
 		t.Fail()
 	} else {
 		t.Log("delete success")
+	}
+}
+
+func TestService_Update(t *testing.T) {
+	ser:=Service{}
+	userInfo:=models.WxUserInfo{}
+	userInfo.NickName = "test-user-2"
+	user,err:=ser.Update("test-app-2","test-open-id-2","",userInfo)
+	if err != nil {
+		t.Error(err)
+		t.Fail()
+	} else {
+		t.Log(user)
+		t.Log("update success")
 	}
 }

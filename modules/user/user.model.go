@@ -13,6 +13,8 @@ const TABLE_NAME = "users"
 type User struct {
 	Id        int64     `json:"id"`
 	UnionId   string    `json:"union_id"`
+	AppId     string    `json:"app_id"`
+	OpenId    string    `json:"open_id"`
 	NickName  string    `json:"nick_name"`
 	Gender    string    `json:"gender"`
 	Language  string    `json:"language"`
@@ -34,7 +36,7 @@ func (m *User) GetById(id int64) (user *User, notFound bool, err error) {
 		return user, false, err
 	}
 	if len(users) <= 0 {
-		return user, true, errors.New("not found")
+		return user, true, nil
 	} else {
 		return users[0], false, nil
 	}
@@ -46,7 +48,19 @@ func (m *User) GetByUnionId(unionId string) (user *User, notFound bool, err erro
 		return user, false, err
 	}
 	if len(users) <= 0 {
-		return user, true, errors.New("not found")
+		return user, true,nil
+	} else {
+		return users[0], false, nil
+	}
+}
+
+func (m *User) GetByAppIdAndOpenId(appId string, openId string) (user *User, notFound bool, err error) {
+	users, err := m.DbSelect(fmt.Sprintf("where `app_id` = '%s' and `open_id` = '%s'", appId, openId))
+	if err != nil {
+		return user, false, err
+	}
+	if len(users) <= 0 {
+		return user, true, nil
 	} else {
 		return users[0], false, nil
 	}
@@ -74,10 +88,12 @@ func (m *User) DbInsert() (id int64, err error) {
 	}
 	sql := fmt.Sprintf(
 		"insert into `%s` "+
-			"(`union_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at`) "+
-			"values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+			"(`union_id`,`app_id`,`open_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at`) "+
+			"values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 		TABLE_NAME,
 		m.UnionId,
+		m.AppId,
+		m.OpenId,
 		m.NickName,
 		m.Gender,
 		m.Language,
@@ -106,11 +122,13 @@ func (m *User) DbReplace() (err error) {
 	}
 	sql := fmt.Sprintf(
 		"replace into `%s` "+
-			"(`id`,`union_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at`) "+
-			"values ('%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+			"(`id`,`union_id`,`app_id`,`open_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at`) "+
+			"values ('%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 		TABLE_NAME,
 		m.Id,
 		m.UnionId,
+		m.AppId,
+		m.OpenId,
 		m.NickName,
 		m.Gender,
 		m.Language,
@@ -130,7 +148,7 @@ func (m *User) DbSelect(querySql string) (users []*User, err error) {
 	if err != nil {
 		return users, err
 	}
-	sql := fmt.Sprintf("select `id`,`union_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at` from `%s`", TABLE_NAME)
+	sql := fmt.Sprintf("select `id`,`union_id`,`app_id`,`open_id`,`nick_name`,`gender`,`language`,`city`,`province`,`country`,`avatar_url`,`created_at`,`updated_at` from `%s`", TABLE_NAME)
 	if querySql != "" {
 		sql += " " + querySql
 	}
@@ -145,6 +163,8 @@ func (m *User) DbSelect(querySql string) (users []*User, err error) {
 		err = rows.Scan(
 			&user.Id,
 			&user.UnionId,
+			&user.AppId,
+			&user.OpenId,
 			&user.NickName,
 			&user.Gender,
 			&user.Language,

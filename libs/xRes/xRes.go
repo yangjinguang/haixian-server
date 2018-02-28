@@ -20,6 +20,7 @@ func BadRequest(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }
 
 func Unauthorized(ct *gin.Context, message interface{}) {
@@ -30,6 +31,7 @@ func Unauthorized(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }
 
 func Created(ct *gin.Context, message interface{}) {
@@ -40,6 +42,7 @@ func Created(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }
 
 func MethodNotAllowed(ct *gin.Context, message interface{}) {
@@ -50,6 +53,7 @@ func MethodNotAllowed(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }
 
 func NotFound(ct *gin.Context, message interface{}) {
@@ -60,6 +64,7 @@ func NotFound(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }
 
 func Forbidden(ct *gin.Context, message interface{}) {
@@ -70,4 +75,5 @@ func Forbidden(ct *gin.Context, message interface{}) {
 		"success": false,
 		"message": message,
 	})
+	ct.Abort()
 }

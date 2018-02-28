@@ -27,6 +27,7 @@ type Config struct {
 		User     string `json:"user"`
 		Password string `json:"password"`
 	} `json:"mysql"`
+	JwtKey string `json:"jwt_key"`
 }
 
 var Conf Config
