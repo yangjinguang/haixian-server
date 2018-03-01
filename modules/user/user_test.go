@@ -65,7 +65,7 @@ func TestUser_DeleteById(t *testing.T) {
 		t.Error(err)
 		t.Fail()
 	}
-	err = user.DeleteById()
+	err = user.DeleteById(18)
 	if err != nil {
 		t.Error(err)
 		t.Fail()
@@ -78,7 +78,7 @@ func TestService_Update(t *testing.T) {
 	ser:=Service{}
 	userInfo:=models.WxUserInfo{}
 	userInfo.NickName = "test-user-2"
-	user,err:=ser.Update("test-app-2","test-open-id-2","",userInfo)
+	user,err:=ser.Sync("test-app-2","test-open-id-2","",userInfo)
 	if err != nil {
 		t.Error(err)
 		t.Fail()

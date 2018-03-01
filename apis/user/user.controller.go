@@ -22,7 +22,7 @@ func (c *Controller) Login(ct *gin.Context) {
 	var ld loginData
 	if err := ct.BindJSON(&ld); err == nil {
 		ser := moduleUser.Service{}
-		user, err := ser.Update(appId, ld.OpenId, ld.UnionId, ld.UserInfo)
+		user, err := ser.Sync(appId, ld.OpenId, ld.UnionId, ld.UserInfo)
 		if err != nil {
 			xRes.BadRequest(ct, err.Error())
 		}

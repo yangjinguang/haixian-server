@@ -12,9 +12,9 @@ type Token struct {
 var jwtKey []byte
 
 type UserClaims struct {
-	Id       int64
-	OpenId   string
-	NickName string
+	Id       int64  `json:"id"`
+	OpenId   string `json:"open_id"`
+	NickName string `json:"nick_name"`
 	jwt.StandardClaims
 }
 

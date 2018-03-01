@@ -9,7 +9,7 @@ type Service struct {
 
 var m User
 
-func (s *Service) Update(appId string, openId string, unionId string, userInfo models.WxUserInfo) (newUser *User, err error) {
+func (s *Service) Sync(appId string, openId string, unionId string, userInfo models.WxUserInfo) (newUser *User, err error) {
 	fUser, notFound, err := m.GetByAppIdAndOpenId(appId, openId)
 	if err != nil {
 		return newUser, err

@@ -1,14 +1,13 @@
 package mysqlCli
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-	"database/sql"
 	"fmt"
 	"github.com/yangjinguang/wechat-server/libs/config"
+	"github.com/yangjinguang/wechat-server/libs/gomysql"
 )
 
-func Conn() (*sql.DB, error) {
-	return sql.Open("mysql", fmt.Sprintf(
+func Conn() (*gomysql.DB, error) {
+	return gomysql.New(fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s?parseTime=true",
 		config.Conf.Mysql.User,
 		config.Conf.Mysql.Password,
@@ -16,4 +15,5 @@ func Conn() (*sql.DB, error) {
 		config.Conf.Mysql.Port,
 		config.Conf.Mysql.Database,
 	))
+
 }

@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/yangjinguang/wechat-server/modules/user"
 	"github.com/yangjinguang/wechat-server/libs/xRes"
+	"github.com/yangjinguang/wechat-server/libs/jwtToken"
 )
 
 func Authorized() gin.HandlerFunc {
@@ -12,8 +12,12 @@ func Authorized() gin.HandlerFunc {
 		if token == "" {
 			xRes.Unauthorized(ct, "token not found")
 		}
-		user := moduleUser.User{}
-		ct.Set("curUser", &user)
+		tk := jwtToken.Token{}
+		userClaims, err := tk.Parse(token)
+		if err != nil {
+			xRes.Unauthorized(ct, err.Error())
+		}
+		ct.Set("curUser", userClaims)
 		ct.Next()
 	}
 }
