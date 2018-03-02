@@ -2,7 +2,6 @@ package moduleUser
 
 import (
 	"time"
-	"github.com/yangjinguang/wechat-server/libs/gomysql"
 	"github.com/yangjinguang/wechat-server/libs/mysqlCli"
 	"fmt"
 )
@@ -15,7 +14,7 @@ type User struct {
 	AppId     string    `json:"app_id" mysql:"app_id"`
 	OpenId    string    `json:"open_id" mysql:"open_id"`
 	NickName  string    `json:"nick_name" mysql:"nick_name"`
-	Gender    string    `json:"gender" mysql:"gender"`
+	Gender    int       `json:"gender" mysql:"gender"`
 	Language  string    `json:"language" mysql:"language"`
 	City      string    `json:"city" mysql:"city"`
 	Province  string    `json:"province" mysql:"province"`
@@ -25,38 +24,34 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at" mysql:"updated_at"`
 }
 
-var db *gomysql.DB
-
-func init() {
-	d, err := mysqlCli.Conn()
-	if err != nil {
-		panic(err.Error())
-	}
-	db = d
-}
-
 func (m *User) Create() (int64, error) {
+	db := mysqlCli.Conn()
 	m.CreatedAt = time.Now()
 	m.UpdatedAt = time.Now()
 	return db.T(TABLE_NAME).Insert(m)
 }
 
 func (m *User) Update() error {
+	db := mysqlCli.Conn()
 	m.UpdatedAt = time.Now()
 	return db.T(TABLE_NAME).Replace(m)
 }
 
 func (m *User) GetAll() (users []*User, err error) {
+	db := mysqlCli.Conn()
 	err = db.T(TABLE_NAME).Select().All(&users)
 	return users, err
 }
 
 func (m *User) GetById(id int64) (user *User, notFound bool, err error) {
-	notFound, err = db.T(TABLE_NAME).SelectById(id).One(&user)
+	db := mysqlCli.Conn()
+	user = &User{}
+	notFound, err = db.T(TABLE_NAME).SelectById(id).One(user)
 	return user, notFound, err
 }
 
 func (m *User) GetByAppIdAndOpenId(appId string, openId string) (user *User, notFound bool, err error) {
+	db := mysqlCli.Conn()
 	user = &User{}
 	notFound, err = db.T(TABLE_NAME).Select().
 		Where(fmt.Sprintf("`app_id` = '%s' and `open_id` = '%s'", appId, openId)).
@@ -65,5 +60,6 @@ func (m *User) GetByAppIdAndOpenId(appId string, openId string) (user *User, not
 }
 
 func (m *User) DeleteById(id int64) error {
+	db := mysqlCli.Conn()
 	return db.T(TABLE_NAME).DeleteById(id)
 }

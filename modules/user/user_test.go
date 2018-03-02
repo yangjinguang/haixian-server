@@ -32,7 +32,7 @@ func TestUser_GetAll(t *testing.T) {
 	}
 }
 func TestUser_GetById(t *testing.T) {
-	m := User{}
+	m := &User{}
 	user, _, err := m.GetById(testId)
 	if err != nil {
 		t.Error(err)

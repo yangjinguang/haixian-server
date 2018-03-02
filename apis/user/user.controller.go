@@ -14,22 +14,29 @@ type Controller struct {
 
 func (c *Controller) Login(ct *gin.Context) {
 	appId := ct.MustGet("appId").(string)
+	appSecret := ct.MustGet("appSecret").(string)
 	type loginData struct {
-		OpenId   string            `json:"open_id" binding:"required"`
-		UnionId  string            `json:"union_id"`
+		Code     string            `json:"code" binding:"required"`
 		UserInfo models.WxUserInfo `json:"user_info" binding:"required"`
 	}
 	var ld loginData
 	if err := ct.BindJSON(&ld); err == nil {
 		ser := moduleUser.Service{}
-		user, err := ser.Sync(appId, ld.OpenId, ld.UnionId, ld.UserInfo)
+		session, err := ser.GetSession(ld.Code, appId, appSecret)
 		if err != nil {
 			xRes.BadRequest(ct, err.Error())
+			return
+		}
+		user, err := ser.Sync(appId, session.Openid, session.Unionid, ld.UserInfo)
+		if err != nil {
+			xRes.BadRequest(ct, err.Error())
+			return
 		}
 		tk := jwtToken.Token{}
 		token, err := tk.New(user.Id, user.OpenId, user.NickName)
 		if err != nil {
 			xRes.BadRequest(ct, err.Error())
+			return
 		}
 		xRes.OK(ct, gin.H{
 			"user":  user,

@@ -81,6 +81,12 @@
 			"revisionTime": "2018-02-27T03:29:29Z"
 		},
 		{
+			"checksumSHA1": "X3rmnk5FP4Uklfd4iAlMg5IbWR0=",
+			"path": "github.com/yangjinguang/gomysql",
+			"revision": "fc2212ce81eb974ccc104ba6d9cc1b8366fea04c",
+			"revisionTime": "2018-03-02T09:15:44Z"
+		},
+		{
 			"checksumSHA1": "gkW/8/3Zvz/RPG4W6N7Tpzzp6oY=",
 			"path": "golang.org/x/sys/unix",
 			"revision": "f6cff0780e542efa0c8e864dc8fa522808f6a598",

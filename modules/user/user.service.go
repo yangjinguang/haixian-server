@@ -2,6 +2,8 @@ package moduleUser
 
 import (
 	"github.com/yangjinguang/wechat-server/libs/models"
+	"github.com/yangjinguang/wechat-server/libs/xHttp"
+	"encoding/json"
 )
 
 type Service struct {
@@ -46,4 +48,21 @@ func (s *Service) Sync(appId string, openId string, unionId string, userInfo mod
 		}
 	}
 	return newUser, err
+}
+
+func (s *Service) GetSession(code string, appId string, appSecret string) (session models.WxUserSession, err error) {
+	var query []models.KeyValue
+	query = append(query, models.KeyValue{Key: "appid", Value: appId})
+	query = append(query, models.KeyValue{Key: "secret", Value: appSecret})
+	query = append(query, models.KeyValue{Key: "js_code", Value: code})
+	query = append(query, models.KeyValue{Key: "grant_type", Value: "authorization_code"})
+	_, body, err := xHttp.Get("https://api.weixin.qq.com/sns/jscode2session", query, []models.KeyValue{})
+	if err != nil {
+		return session, err
+	}
+	err = json.Unmarshal(body, &session)
+	if err != nil {
+		return session, err
+	}
+	return session, nil
 }

@@ -19,8 +19,8 @@ func main() {
 			"message": "it's worked !!",
 		})
 	})
-	apiExample.RouterInit(r.Group("/v1", handlers.Authorized()))
-	apiUser.RouterInit(r.Group("/user"))
+	apiExample.RouterInit(r.Group("/api/v1", handlers.Authorized()))
+	apiUser.RouterInit(r.Group("/api/user"))
 	port := config.Conf.Port
 	r.Run(":" + port) // listen and serve on 0.0.0.0:8080
 }
